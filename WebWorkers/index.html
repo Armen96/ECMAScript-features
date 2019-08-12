@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Web Workers Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+<div class="container jumbotron">
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <h3>Web worker</h3>
+
+            <button class="btn btn-primary" onclick="testWorker()">start worker</button>
+            <h3 id="workerOutput"></h3>
+            <button class="btn btn-danger" onclick="terminateWorker()">terminate worker</button>
+        </div>
+
+        <div class="col-md-4">
+
+            <h3>Main thread</h3>
+
+            <button class="btn btn-success" onclick="testMainThread()">start blocking thread</button>
+            <h3 id="mainThreadOutput"></h3>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    var worker;
+
+    function testWorker() {
+        if (typeof(Worker) !== "undefined") {
+
+            if (typeof(worker) == "undefined") {
+                worker = new Worker("worker.js");
+            }
+
+            worker.onmessage = function(event) {
+                document.getElementById("workerOutput").innerHTML = event.data;
+            };
+
+        } else {
+            document.getElementById("workerOutput").innerHTML = "Web Workers are not supported in your browser";
+        }
+    }
+
+    function terminateWorker() {
+        worker.terminate();
+        worker = undefined;
+    }
+
+    function testMainThread() {
+       setTimeout(function(){
+           document.getElementById("mainThreadOutput").innerHTML = "Main Thread Counter: 5000ms";
+       },5000)
+    }
+</script>
+
+</body>
+
+</html>
